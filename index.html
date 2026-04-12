@@ -55,7 +55,7 @@
 <div id="topbar">
     <div class="logo">Planning <span>DMF</span></div>
     <div class="sep"></div>
-    <button class="btn-create" onclick="window.open('Lien_Vers_Votre_Formulaire', '_blank')">+ Ajouter un RDV</button>
+    <button class="btn-create" onclick="window.open('https://docs.google.com/forms/d/e/1FAIpQLSf9oIbVcdBDfJzyPIn8ZDLhveJRIvavcYbniYXTBi4YjXAyPQ/viewform', '_blank')">+ Ajouter un RDV</button>
     <button onclick="toggleEventsList()">📋</button>
     <button onclick="toggleAdminPanel()">⚙️</button>
 </div>
@@ -74,8 +74,8 @@
 <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
 <script>
 // --- CONFIGURATION ---
-// URL de votre nouveau Google Sheet
-const URL_CSV = "https://docs.google.com/spreadsheets/d/194uP2Olt7EbXuLvMWquGN1aWTxz8ZLe9mHfJgZxBDkg/gviz/tq?tqx=out:csv";
+// MODIFICATION ICI : On précise l'onglet "Réponses au formulaire 1" pour lire les nouveaux RDV
+const URL_CSV = "https://docs.google.com/spreadsheets/d/194uP2Olt7EbXuLvMWquGN1aWTxz8ZLe9mHfJgZxBDkg/gviz/tq?tqx=out:csv&sheet=Réponses%20au%20formulaire%201";
 
 const TYPE_CONFIG = {
     evenement: { color: '#7d5bbe', icon: '📅' },
@@ -105,7 +105,7 @@ async function loadEvents() {
         header: true,
         skipEmptyLines: true,
         complete: function(results) {
-            // Filtrage pour ne prendre que les lignes ayant des coordonnées valides
+            // Note : Vérifiez que les noms des colonnes dans votre Google Sheet (Titre, Lat, Lng) correspondent exactement
             events = results.data.filter(row => row.Lat && row.Lng).map(e => ({
                 title: e.Titre || "Titre absent",
                 date: e.Date || "–",
