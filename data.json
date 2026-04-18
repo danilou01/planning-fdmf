@@ -190,5 +190,17 @@
     "lat": 48.5734053,
     "lng": 7.752111299999999,
     "ville": "strasbourg"
+  },
+  {
+    "horodateur": "2026-04-18T19:15:36.000Z",
+    "titre": "rdv",
+    "date": "2026-07-01T22:00:00.000Z",
+    "heure": "",
+    "type": "réunion",
+    "organisateur": "",
+    "adresse e-mail": "rdan9646@gmail.com",
+    "lat": 48.3899275,
+    "lng": -4.4855959,
+    "ville": "brest"
   }
 ]
