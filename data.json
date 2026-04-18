@@ -166,5 +166,17 @@
     "Lat": 44.8416106,
     "Lng": -0.5810938000000001,
     "Ville": "bordeaux"
+  },
+  {
+    "Horodateur": "2026-04-18T18:59:48.000Z",
+    "Titre": "rdv reunion",
+    "Date": "2026-07-14T22:00:00.000Z",
+    "Heure": "",
+    "Type": "réunion",
+    "Organisateur": "",
+    "Adresse e-mail": "rdan9646@gmail.com",
+    "Lat": 49.1820662,
+    "Lng": -0.3708324,
+    "Ville": "caen"
   }
 ]
