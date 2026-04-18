@@ -1,0 +1,29 @@
+[
+  {
+    "Horodateur": "",
+    "Titre": "Test",
+    "Date": "",
+    "Ville": "",
+    "Type": "evenement",
+    "Lat": "46.6",
+    "Lng": "2026-07-31T22:00:00.000Z"
+  },
+  {
+    "Horodateur": "",
+    "Titre": "test2",
+    "Date": "",
+    "Ville": "",
+    "Type": "projet",
+    "Lat": "46.6",
+    "Lng": "2026-08-31T22:00:00.000Z"
+  },
+  {
+    "Horodateur": "",
+    "Titre": "test3",
+    "Date": "",
+    "Ville": "paris",
+    "Type": "projet",
+    "Lat": "",
+    "Lng": ""
+  }
+]
