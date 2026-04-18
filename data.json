@@ -202,5 +202,17 @@
     "lat": 48.3899275,
     "lng": -4.4855959,
     "ville": "brest"
+  },
+  {
+    "horodateur": "2026-04-18T19:25:15.000Z",
+    "titre": "rdv bureau",
+    "date": "2026-07-03T22:00:00.000Z",
+    "heure": "",
+    "type": "réunion",
+    "organisateur": "",
+    "adresse e-mail": "rdan9646@gmail.com",
+    "lat": 43.4933798,
+    "lng": -1.4757394,
+    "ville": "bayonne"
   }
 ]
