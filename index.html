@@ -70,6 +70,7 @@
     <div class="logo">Planning <span>DMF</span></div>
     <div class="sep"></div>
     <button class="btn-create" onclick="window.open('https://docs.google.com/forms/d/e/1FAIpQLSf9oIbVcdBDfJzyPIn8ZDLhveJRIvavcYbniYXTBi4YjXAyPQ/viewform', '_blank')">+ Ajouter un RDV</button>
+    <button id="btn-reset-map" onclick="resetMap()" title="Vue France entière" style="display:none;">🗺️ France</button>
     <button onclick="toggleEventsList()" title="Liste des RDV">📋</button>
     <button onclick="toggleAdminPanel()" title="Paramètres">⚙️</button>
 </div>
@@ -128,9 +129,11 @@ const REGIONS = [
 ];
 
 let events = [];
+const MAP_DEFAULT = { center: [46.60, 1.88], zoom: 6 };
+
 const map = L.map('map', {
-    center: [46.60, 1.88],
-    zoom: 6,
+    center: MAP_DEFAULT.center,
+    zoom: MAP_DEFAULT.zoom,
     zoomControl: false,
     scrollWheelZoom: false,
     doubleClickZoom: false,
@@ -140,6 +143,18 @@ const map = L.map('map', {
     keyboard: false
 });
 L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png').addTo(map);
+
+// Zoom programmatique vers un RDV, avec apparition du bouton retour
+function flyToEvent(lat, lng) {
+    map.flyTo([lat, lng], 11, { duration: 1.2 });
+    document.getElementById('btn-reset-map').style.display = 'inline-block';
+}
+
+// Retour à la vue France entière
+function resetMap() {
+    map.flyTo(MAP_DEFAULT.center, MAP_DEFAULT.zoom, { duration: 1.2 });
+    document.getElementById('btn-reset-map').style.display = 'none';
+}
 
 // Masque hors France : on charge les contours de la France métropolitaine
 // et on superpose un polygone mondial avec un "trou" en forme de France
@@ -260,7 +275,7 @@ function renderMapAndUI() {
     // Mise à jour du panneau de liste
     document.getElementById('events-list-content').innerHTML = events.length > 0 
         ? events.map(e => `
-            <div style="padding:12px; border-bottom:1px solid #f0f0f0; cursor:pointer;" onclick="map.flyTo([${e.lat},${e.lng}],12); toggleEventsList();">
+            <div style="padding:12px; border-bottom:1px solid #f0f0f0; cursor:pointer;" onclick="flyToEvent(${e.lat},${e.lng}); toggleEventsList();">
                 <b style="color:var(--dmf-violet);">${e.title}</b><br>
                 <small>📅 ${e.date} | 📍 ${e.region}</small>
             </div>`).join('')
@@ -279,7 +294,7 @@ function renderRegion(r) {
             </div>
             <div class="region-events">
                 ${hasEvents
-                    ? evsInRegion.map(e => `<div class="region-ev-item" onclick="map.flyTo([${e.lat},${e.lng}],12)">${e.title} <span class="ev-date">${e.date}</span></div>`).join('')
+                    ? evsInRegion.map(e => `<div class="region-ev-item" onclick="flyToEvent(${e.lat},${e.lng})">${e.title} <span class="ev-date">${e.date}</span></div>`).join('')
                     : '<div style="color:#bbb; font-style:italic; font-size:0.85em; padding:4px 0;">Aucun RDV</div>'
                 }
             </div>
