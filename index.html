@@ -128,8 +128,52 @@ const REGIONS = [
 ];
 
 let events = [];
-const map = L.map('map', { center: [46.60, 1.88], zoom: 6 });
+const map = L.map('map', {
+    center: [46.60, 1.88],
+    zoom: 6,
+    zoomControl: false,
+    scrollWheelZoom: false,
+    doubleClickZoom: false,
+    dragging: false,
+    touchZoom: false,
+    boxZoom: false,
+    keyboard: false
+});
 L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png').addTo(map);
+
+// Masque hors France : on charge les contours de la France métropolitaine
+// et on superpose un polygone mondial avec un "trou" en forme de France
+fetch('https://raw.githubusercontent.com/gregoiredavid/france-geojson/master/france-metropole.geojson')
+    .then(r => r.json())
+    .then(franceGeoJson => {
+        // Polygone mondial (boîte englobante très large)
+        const world = [[-90, -180], [-90, 180], [90, 180], [90, -180], [-90, -180]];
+
+        // Extraire tous les anneaux de la France pour créer un "trou"
+        const franceCoords = [];
+        franceGeoJson.features.forEach(feature => {
+            const geom = feature.geometry;
+            const polys = geom.type === 'MultiPolygon' ? geom.coordinates : [geom.coordinates];
+            polys.forEach(poly => {
+                poly.forEach(ring => {
+                    // Leaflet attend [lat, lng], GeoJSON donne [lng, lat]
+                    franceCoords.push(ring.map(([lng, lat]) => [lat, lng]));
+                });
+            });
+        });
+
+        // Créer le polygone masque : monde - France
+        const maskLayer = L.polygon([world, ...franceCoords], {
+            color: 'none',
+            fillColor: '#e8e4f0',
+            fillOpacity: 0.75,
+            interactive: false
+        }).addTo(map);
+    })
+    .catch(() => {
+        // Fallback silencieux si le fetch échoue
+        console.warn("Impossible de charger les contours France");
+    });
 
 // Affichage initial des sidebars (vides) dès le chargement de la page
 function initSidebars() {
