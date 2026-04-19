@@ -5,11 +5,12 @@
     "date": "2026-04-19T22:00:00.000Z",
     "heure": "1899-12-30T15:10:39.000Z",
     "type": "réunion",
-    "organisateur": "daniel rondeau",
+    "organisateur": "",
     "adresse e-mail": "rdan9646@gmail.com",
     "lat": "",
     "lng": "",
-    "ville": ""
+    "ville": "",
+    "heure du rdv": ""
   },
   {
     "horodateur": "2026-04-12T16:37:14.000Z",
@@ -17,11 +18,12 @@
     "date": "2026-04-14T22:00:00.000Z",
     "heure": "1899-12-30T20:35:39.000Z",
     "type": "réunion",
-    "organisateur": "daniel rondeau",
+    "organisateur": "",
     "adresse e-mail": "rdan9646@gmail.com",
     "lat": "",
     "lng": "",
-    "ville": ""
+    "ville": "",
+    "heure du rdv": ""
   },
   {
     "horodateur": "2026-04-12T16:41:41.000Z",
@@ -29,11 +31,12 @@
     "date": "2026-04-16T22:00:00.000Z",
     "heure": "1899-12-30T18:35:39.000Z",
     "type": "réunion",
-    "organisateur": "daniel Rondeau",
+    "organisateur": "",
     "adresse e-mail": "rdan9646@gmail.com",
     "lat": "",
     "lng": "",
-    "ville": ""
+    "ville": "",
+    "heure du rdv": ""
   },
   {
     "horodateur": "2026-04-12T16:45:09.000Z",
@@ -41,11 +44,12 @@
     "date": "2026-04-24T22:00:00.000Z",
     "heure": "1899-12-30T20:35:39.000Z",
     "type": "réunion",
-    "organisateur": "Daniel Rondeau",
+    "organisateur": "",
     "adresse e-mail": "rdan9646@gmail.com",
     "lat": "",
     "lng": "",
-    "ville": ""
+    "ville": "",
+    "heure du rdv": ""
   },
   {
     "horodateur": "2026-04-12T16:52:26.000Z",
@@ -53,11 +57,12 @@
     "date": "2026-04-29T22:00:00.000Z",
     "heure": "1899-12-30T15:32:39.000Z",
     "type": "réunion",
-    "organisateur": "Daniel Rondeau",
+    "organisateur": "",
     "adresse e-mail": "rdan9646@gmail.com",
     "lat": "",
     "lng": "",
-    "ville": ""
+    "ville": "",
+    "heure du rdv": ""
   },
   {
     "horodateur": "2026-04-12T17:27:47.000Z",
@@ -65,11 +70,12 @@
     "date": "2026-04-28T22:00:00.000Z",
     "heure": "1899-12-30T20:35:39.000Z",
     "type": "réunion",
-    "organisateur": "Daniel Rondeau",
+    "organisateur": "",
     "adresse e-mail": "rdan9646@gmail.com",
     "lat": "",
     "lng": "",
-    "ville": ""
+    "ville": "",
+    "heure du rdv": ""
   },
   {
     "horodateur": "2026-04-12T17:50:39.000Z",
@@ -81,7 +87,8 @@
     "adresse e-mail": "rdan9646@gmail.com",
     "lat": "",
     "lng": "",
-    "ville": "Marseille"
+    "ville": "Marseille",
+    "heure du rdv": ""
   },
   {
     "horodateur": "2026-04-12T18:00:17.000Z",
@@ -93,7 +100,8 @@
     "adresse e-mail": "rdan9646@gmail.com",
     "lat": "",
     "lng": "",
-    "ville": "Grenoble"
+    "ville": "Grenoble",
+    "heure du rdv": ""
   },
   {
     "horodateur": "2026-04-18T17:31:56.000Z",
@@ -105,7 +113,8 @@
     "adresse e-mail": "rdan9646@gmail.com",
     "lat": "",
     "lng": "",
-    "ville": "metz"
+    "ville": "metz",
+    "heure du rdv": ""
   },
   {
     "horodateur": "2026-04-18T17:58:44.000Z",
@@ -117,7 +126,8 @@
     "adresse e-mail": "rdan9646@gmail.com",
     "lat": "",
     "lng": "",
-    "ville": "Toulouse"
+    "ville": "Toulouse",
+    "heure du rdv": ""
   },
   {
     "horodateur": "2026-04-18T18:12:27.000Z",
@@ -129,7 +139,8 @@
     "adresse e-mail": "rdan9646@gmail.com",
     "lat": "",
     "lng": "",
-    "ville": "lille"
+    "ville": "lille",
+    "heure du rdv": ""
   },
   {
     "horodateur": "2026-04-18T18:29:00.000Z",
@@ -141,7 +152,8 @@
     "adresse e-mail": "rdan9646@gmail.com",
     "lat": "",
     "lng": "",
-    "ville": "Paris"
+    "ville": "Paris",
+    "heure du rdv": ""
   },
   {
     "horodateur": "2026-04-18T18:34:16.000Z",
@@ -153,7 +165,8 @@
     "adresse e-mail": "rdan9646@gmail.com",
     "lat": "",
     "lng": "",
-    "ville": "rennes"
+    "ville": "rennes",
+    "heure du rdv": ""
   },
   {
     "horodateur": "2026-04-18T18:45:59.000Z",
@@ -165,7 +178,8 @@
     "adresse e-mail": "rdan9646@gmail.com",
     "lat": 44.8416106,
     "lng": -0.5810938000000001,
-    "ville": "bordeaux"
+    "ville": "bordeaux",
+    "heure du rdv": ""
   },
   {
     "horodateur": "2026-04-18T18:59:48.000Z",
@@ -177,7 +191,8 @@
     "adresse e-mail": "rdan9646@gmail.com",
     "lat": 49.1820662,
     "lng": -0.3708324,
-    "ville": "caen"
+    "ville": "caen",
+    "heure du rdv": ""
   },
   {
     "horodateur": "2026-04-18T19:10:59.000Z",
@@ -189,7 +204,8 @@
     "adresse e-mail": "rdan9646@gmail.com",
     "lat": 48.5734053,
     "lng": 7.752111299999999,
-    "ville": "strasbourg"
+    "ville": "strasbourg",
+    "heure du rdv": ""
   },
   {
     "horodateur": "2026-04-18T19:15:36.000Z",
@@ -201,7 +217,8 @@
     "adresse e-mail": "rdan9646@gmail.com",
     "lat": 48.3899275,
     "lng": -4.4855959,
-    "ville": "brest"
+    "ville": "brest",
+    "heure du rdv": ""
   },
   {
     "horodateur": "2026-04-18T19:25:15.000Z",
@@ -213,7 +230,8 @@
     "adresse e-mail": "rdan9646@gmail.com",
     "lat": 43.4933798,
     "lng": -1.4757394,
-    "ville": "bayonne"
+    "ville": "bayonne",
+    "heure du rdv": ""
   },
   {
     "horodateur": "2026-04-19T08:29:45.000Z",
@@ -225,7 +243,8 @@
     "adresse e-mail": "rdan9646@gmail.com",
     "lat": 49.258329,
     "lng": 4.031696,
-    "ville": "reims"
+    "ville": "reims",
+    "heure du rdv": ""
   },
   {
     "horodateur": "2026-04-19T08:37:02.000Z",
@@ -237,7 +256,8 @@
     "adresse e-mail": "valou.fournol@gmail.com",
     "lat": 48.80225850000001,
     "lng": 2.1297422,
-    "ville": "Versailles"
+    "ville": "Versailles",
+    "heure du rdv": ""
   },
   {
     "horodateur": "2026-04-19T09:21:28.000Z",
@@ -249,6 +269,20 @@
     "adresse e-mail": "rdan9646@gmail.com",
     "lat": 45.793516,
     "lng": 3.0794951,
-    "ville": "clermont ferrand"
+    "ville": "clermont ferrand",
+    "heure du rdv": ""
+  },
+  {
+    "horodateur": "2026-04-19T09:53:04.000Z",
+    "titre": "rdv bureau",
+    "date": "2026-06-09T22:00:00.000Z",
+    "heure": "",
+    "type": "réunion",
+    "organisateur": "daniel rondeau",
+    "adresse e-mail": "rdan9646@gmail.com",
+    "lat": 45.188529,
+    "lng": 5.724524,
+    "ville": "grenoble",
+    "heure du rdv": "1899-12-30T09:36:39.000Z"
   }
 ]
