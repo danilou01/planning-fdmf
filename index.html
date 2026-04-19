@@ -45,12 +45,12 @@
         #map-wrapper { flex: 1; position: relative; min-width: 0; }
         #map { height: 100%; width: 100%; z-index: 1; }
         
-        #events-list-panel, #admin-panel { 
+        #events-list-panel, #admin-panel, #archives-panel { 
             position: absolute; top: 10px; left: 10px; right: 10px; bottom: 10px; 
             background: white; padding: 20px; border-radius: var(--radius); 
             box-shadow: 0 10px 30px rgba(0,0,0,0.2); z-index: 2000; display: none; overflow-y: auto; 
         }
-        @media (min-width: 600px) { #admin-panel { left: auto; width: 350px; } #events-list-panel { right: auto; width: 350px; } }
+        @media (min-width: 600px) { #admin-panel { left: auto; width: 350px; } #events-list-panel { right: auto; width: 350px; } #archives-panel { right: auto; width: 380px; } }
         
         h3 { font-family: 'Baloo 2'; margin-bottom: 15px; color: var(--dmf-dark); }
         .close-x { position: absolute; top: 15px; right: 15px; background: none; border: none; font-size: 1.5em; color: #ccc; cursor:pointer; }
@@ -72,6 +72,7 @@
     <button class="btn-create" onclick="window.open('https://docs.google.com/forms/d/e/1FAIpQLSf9oIbVcdBDfJzyPIn8ZDLhveJRIvavcYbniYXTBi4YjXAyPQ/viewform', '_blank')">+ Ajouter un RDV</button>
     <button id="btn-reset-map" onclick="resetMap()" title="Vue France entière" style="display:none;">🗺️ France</button>
     <button onclick="toggleEventsList()" title="Liste des RDV">📋</button>
+    <button onclick="toggleArchivesPanel()" title="Archives">📦 Archives</button>
     <button onclick="toggleAdminPanel()" title="Paramètres">⚙️</button>
 </div>
 
@@ -127,6 +128,13 @@
             <h3>Liste des RDV</h3>
             <div id="events-list-content"></div>
         </div>
+
+        <div id="archives-panel">
+            <button class="close-x" onclick="toggleArchivesPanel()">✕</button>
+            <h3>📦 Archives</h3>
+            <p style="font-size:0.82em; color:#999; margin-bottom:12px;">RDV dont la date est passée</p>
+            <div id="archives-list-content"></div>
+        </div>
         
         <div id="admin-panel">
             <button class="close-x" onclick="toggleAdminPanel()">✕</button>
@@ -167,6 +175,7 @@ const REGIONS = [
 ];
 
 let events = [];
+let archives = [];
 const MAP_DEFAULT = { center: [46.60, 1.88], zoom: 6 };
 
 const map = L.map('map', {
@@ -275,15 +284,20 @@ async function loadEvents() {
             return String(h).trim();
         }
 
+        const today = new Date();
+        today.setHours(0, 0, 0, 0);
+
         // On ne garde que les entrées avec lat/lng valides
-        events = data
+        const allEvents = data
             .filter(row => row.lat !== "" && row.lat !== null && row.lng !== "" && row.lng !== null)
             .map(e => {
                 const lat = parseFloat(String(e.lat).replace(',', '.'));
                 const lng = parseFloat(String(e.lng).replace(',', '.'));
+                const dateRaw = e.date ? new Date(e.date) : null;
                 return {
                     title: e.titre || "Sans titre",
                     date: formatDate(e.date),
+                    dateRaw: dateRaw,
                     time: formatHeure(e.heure),
                     organisateur: (e.organisateur || "").toString().trim(),
                     type: normalizeType(e.type),
@@ -295,8 +309,16 @@ async function loadEvents() {
             })
             .filter(e => !isNaN(e.lat) && !isNaN(e.lng));
 
-        console.log(`${events.length} RDV avec coordonnées trouvés`);
-        showToast(`${events.length} rendez-vous chargés`);
+        // RDV à venir (date >= aujourd'hui ou date inconnue) → sur la carte
+        events = allEvents.filter(e => !e.dateRaw || e.dateRaw >= today);
+
+        // RDV passés → archives, triés du plus récent au plus ancien
+        archives = allEvents
+            .filter(e => e.dateRaw && e.dateRaw < today)
+            .sort((a, b) => b.dateRaw - a.dateRaw);
+
+        console.log(`${events.length} RDV à venir, ${archives.length} archivés`);
+        showToast(`${events.length} RDV à venir · ${archives.length} archivés`);
         renderMapAndUI();
     } catch(err) {
         showToast("Erreur lors du chargement des données");
@@ -332,8 +354,15 @@ function renderMapAndUI() {
     document.getElementById('regions-left-content').innerHTML = REGIONS.slice(0, half).map(r => renderRegion(r)).join('');
     document.getElementById('regions-right-content').innerHTML = REGIONS.slice(half).map(r => renderRegion(r)).join('');
     
-    // Mise à jour du panneau de liste
-    document.getElementById('events-list-content').innerHTML = events.length > 0 
+    // Mise à jour du panneau archives
+    document.getElementById('archives-list-content').innerHTML = archives.length > 0
+        ? archives.map(e => `
+            <div style="padding:10px 12px; border-bottom:1px solid #f0f0f0; opacity:0.75;">
+                <b style="color:#999;">${e.title}</b><br>
+                <small>📅 ${e.date}${e.time ? ' à ' + e.time : ''} | 📍 ${e.ville || e.region}</small>
+                ${e.organisateur ? `<br><small>👤 ${e.organisateur}</small>` : ''}
+            </div>`).join('')
+        : "<p style='color:#bbb; text-align:center; font-style:italic;'>Aucun RDV archivé.</p>"; 
         ? events.map(e => `
             <div style="padding:12px; border-bottom:1px solid #f0f0f0; cursor:pointer;" onclick="flyToEvent(${e.lat},${e.lng}); toggleEventsList();">
                 <b style="color:var(--dmf-violet);">${e.title}</b><br>
@@ -380,12 +409,13 @@ function getRegionForCoords(lat, lng) {
 }
 
 function toggleEventsList() { togglePanel('events-list-panel'); }
+function toggleArchivesPanel() { togglePanel('archives-panel'); }
 function toggleAdminPanel() { togglePanel('admin-panel'); }
 
 function togglePanel(id) {
     const p = document.getElementById(id); 
     const isVisible = p.style.display === 'block';
-    document.querySelectorAll('#events-list-panel, #admin-panel').forEach(el => el.style.display = 'none');
+    document.querySelectorAll('#events-list-panel, #admin-panel, #archives-panel').forEach(el => el.style.display = 'none');
     p.style.display = isVisible ? 'none' : 'block';
 }
 
