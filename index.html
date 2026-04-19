@@ -7,7 +7,7 @@
     <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700&family=Baloo+2:wght@700;800&display=swap" rel="stylesheet">
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/PapaParse/5.3.2/papaparse.min.js"></script>
+    
     <style>
         :root {
             --dmf-violet: #7d5bbe; --dmf-violet-light: #f4f1fa;
@@ -92,7 +92,7 @@
         <div id="admin-panel">
             <button class="close-x" onclick="toggleAdminPanel()">✕</button>
             <h3>Administration</h3>
-            <p style="font-size:0.85em; color:#666; margin-bottom:15px;">Source : Google Sheets (Réponses Formulaire)</p>
+            <p style="font-size:0.85em; color:#666; margin-bottom:15px;">Source : data.json (local)</p>
             <button onclick="loadEvents()" style="width:100%; padding:12px; background:var(--dmf-violet); color:white; border:none; border-radius:8px; cursor:pointer; font-weight:bold;">🔄 Actualiser la carte</button>
         </div>
     </div>
@@ -108,8 +108,7 @@
 <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
 <script>
 // --- CONFIGURATION ---
-// IMPORTANT : On pointe vers l'onglet des réponses du formulaire
-const URL_CSV = "https://docs.google.com/spreadsheets/d/194uP2Olt7EbXuLvMWquGN1aWTxz8ZLe9mHfJgZxBDkg/gviz/tq?tqx=out:csv&sheet=Réponses%20au%20formulaire%201";
+const DATA_URL = "data.json";
 
 const TYPE_CONFIG = {
     evenement: { color: '#7d5bbe', icon: '📅' },
@@ -132,34 +131,64 @@ let events = [];
 const map = L.map('map', { center: [46.60, 1.88], zoom: 6 });
 L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png').addTo(map);
 
-// Fonction de chargement des données
+// Affichage initial des sidebars (vides) dès le chargement de la page
+function initSidebars() {
+    const half = Math.ceil(REGIONS.length / 2);
+    document.getElementById('regions-left-content').innerHTML = REGIONS.slice(0, half).map(r => renderRegion(r)).join('');
+    document.getElementById('regions-right-content').innerHTML = REGIONS.slice(half).map(r => renderRegion(r)).join('');
+}
+
+// Fonction de chargement des données depuis data.json
 async function loadEvents() {
-    showToast("Synchronisation avec Google Sheets...");
-    Papa.parse(URL_CSV, {
-        download: true,
-        header: true,
-        skipEmptyLines: true,
-        complete: function(results) {
-            console.log("Données reçues :", results.data);
-            
-            // Filtrage : on ne prend que les lignes où Lat et Lng ont été générés par votre script
-            events = results.data.filter(row => row.Lat && row.Lng).map(e => ({
-                title: e.Titre || "Sans titre",
-                date: e.Date || "Non définie",
-                time: e.Heure || "",
-                type: (e.Type || "evenement").toLowerCase().trim(),
-                lat: parseFloat(String(e.Lat).replace(',', '.')),
-                lng: parseFloat(String(e.Lng).replace(',', '.')),
-                region: getRegionForCoords(parseFloat(String(e.Lat).replace(',', '.')), parseFloat(String(e.Lng).replace(',', '.')))
-            }));
-            
-            renderMapAndUI();
-        },
-        error: function(err) {
-            showToast("Erreur lors de la lecture du Sheet");
-            console.error(err);
+    showToast("Chargement des rendez-vous...");
+    try {
+        const response = await fetch(DATA_URL + '?t=' + Date.now());
+        const data = await response.json();
+        console.log("Données reçues :", data);
+
+        // Normalisation du type pour correspondre à TYPE_CONFIG
+        function normalizeType(t) {
+            t = (t || "").toLowerCase().trim();
+            if (t.includes("réunion") || t.includes("reunion")) return "reunion";
+            if (t.includes("instance")) return "instance";
+            if (t.includes("projet")) return "projet";
+            return "evenement";
         }
-    });
+
+        // Formatage de la date
+        function formatDate(d) {
+            if (!d) return "Non définie";
+            try {
+                return new Date(d).toLocaleDateString('fr-FR', { day: '2-digit', month: '2-digit', year: 'numeric' });
+            } catch(e) { return d; }
+        }
+
+        // On ne garde que les entrées avec lat/lng valides
+        events = data
+            .filter(row => row.lat !== "" && row.lat !== null && row.lng !== "" && row.lng !== null)
+            .map(e => {
+                const lat = parseFloat(String(e.lat).replace(',', '.'));
+                const lng = parseFloat(String(e.lng).replace(',', '.'));
+                return {
+                    title: e.titre || "Sans titre",
+                    date: formatDate(e.date),
+                    time: "",
+                    type: normalizeType(e.type),
+                    ville: e.ville || "",
+                    lat: lat,
+                    lng: lng,
+                    region: getRegionForCoords(lat, lng)
+                };
+            })
+            .filter(e => !isNaN(e.lat) && !isNaN(e.lng));
+
+        console.log(`${events.length} RDV avec coordonnées trouvés`);
+        showToast(`${events.length} rendez-vous chargés`);
+        renderMapAndUI();
+    } catch(err) {
+        showToast("Erreur lors du chargement des données");
+        console.error(err);
+    }
 }
 
 function renderMapAndUI() {
@@ -196,20 +225,30 @@ function renderMapAndUI() {
 
 function renderRegion(r) {
     const evsInRegion = events.filter(e => e.region === r.name);
+    const hasEvents = evsInRegion.length > 0;
     return `
         <div class="region-item">
             <div class="region-item-header" onclick="toggleRegion(this)">
                 <span class="region-name">${r.name}</span>
-                <span class="region-count ${evsInRegion.length ? 'active' : ''}">${evsInRegion.length}</span>
+                <span class="region-count ${hasEvents ? 'active' : ''}">${evsInRegion.length}</span>
+                <span class="region-chevron" style="margin-left:6px; color:#bbb; font-size:0.8em; transition:transform 0.2s;">▶</span>
             </div>
             <div class="region-events">
-                ${evsInRegion.map(e => `<div class="region-ev-item" onclick="map.flyTo([${e.lat},${e.lng}],12)">${e.title} <span class="ev-date">${e.date}</span></div>`).join('')}
+                ${hasEvents
+                    ? evsInRegion.map(e => `<div class="region-ev-item" onclick="map.flyTo([${e.lat},${e.lng}],12)">${e.title} <span class="ev-date">${e.date}</span></div>`).join('')
+                    : '<div style="color:#bbb; font-style:italic; font-size:0.85em; padding:4px 0;">Aucun RDV</div>'
+                }
             </div>
         </div>`;
 }
 
 // Utilitaires
-function toggleRegion(header) { header.nextElementSibling.classList.toggle('open'); }
+function toggleRegion(header) {
+    const events = header.nextElementSibling;
+    const chevron = header.querySelector('.region-chevron');
+    const isOpen = events.classList.toggle('open');
+    if (chevron) chevron.style.transform = isOpen ? 'rotate(90deg)' : 'rotate(0deg)';
+}
 
 function getRegionForCoords(lat, lng) {
     let nearest = REGIONS[0], minD = Infinity;
@@ -238,6 +277,7 @@ function showToast(m) {
 }
 
 // Lancement au démarrage
+initSidebars();
 loadEvents();
 </script>
 </body>
