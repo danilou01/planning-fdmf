@@ -86,6 +86,23 @@
             pointer-events: none; white-space: nowrap;
         }
         #toast.show { opacity: 1; bottom: 40px; }
+
+        /* Infobulle survol marqueur */
+        .rdv-tooltip {
+            background: var(--dmf-dark) !important;
+            border: none !important;
+            border-radius: 10px !important;
+            color: #fff !important;
+            font-family: 'Nunito', sans-serif !important;
+            font-size: 0.82em !important;
+            padding: 8px 12px !important;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.25) !important;
+            line-height: 1.6 !important;
+            white-space: nowrap;
+        }
+        .rdv-tooltip::before {
+            border-top-color: var(--dmf-dark) !important;
+        }
     </style>
 </head>
 <body>
@@ -344,6 +361,17 @@ function renderMapAndUI() {
         });
         L.marker([ev.lat, ev.lng], { icon })
          .addTo(map)
+         .bindTooltip(`
+            <b>${conf.icon} ${ev.title}</b><br>
+            📅 ${ev.date}${ev.time ? ' à ' + ev.time : ''}<br>
+            📍 ${ev.ville || ev.region}
+            ${ev.organisateur ? '<br>👤 ' + ev.organisateur : ''}
+         `, {
+            direction: 'top',
+            offset: [0, -10],
+            opacity: 0.97,
+            className: 'rdv-tooltip'
+         })
          .bindPopup(`
             <b>${conf.icon} ${ev.title}</b><br>
             📅 ${ev.date}${ev.time ? ' à ' + ev.time : ''}<br>
