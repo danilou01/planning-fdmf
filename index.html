@@ -107,6 +107,20 @@
     <div id="map-wrapper">
         <div id="map"></div>
         <button id="reset-map-btn" onclick="resetMap()">🗺️ Vue France</button>
+
+        <!-- Légende des types -->
+        <div id="map-legend" style="
+            position: absolute; bottom: 60px; right: 12px; z-index: 1000;
+            background: white; border-radius: 10px; padding: 10px 14px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.15); font-family: 'Nunito', sans-serif;
+            font-size: 0.78em; line-height: 1.8;
+        ">
+            <div style="font-weight:800; color:#2c263d; margin-bottom:4px; font-size:0.85em;">Types de RDV</div>
+            <div><span style="display:inline-block;width:11px;height:11px;border-radius:50%;background:#d64d8a;margin-right:6px;vertical-align:middle;"></span>Réunion</div>
+            <div><span style="display:inline-block;width:11px;height:11px;border-radius:50%;background:#67a379;margin-right:6px;vertical-align:middle;"></span>Projet</div>
+            <div><span style="display:inline-block;width:11px;height:11px;border-radius:50%;background:#5bc0de;margin-right:6px;vertical-align:middle;"></span>Instance</div>
+            <div><span style="display:inline-block;width:11px;height:11px;border-radius:50%;background:#7d5bbe;margin-right:6px;vertical-align:middle;"></span>Événement</div>
+        </div>
         
         <div id="events-list-panel">
             <button class="close-x" onclick="toggleEventsList()">✕</button>
@@ -299,8 +313,9 @@ function renderMapAndUI() {
         const conf = TYPE_CONFIG[ev.type] || TYPE_CONFIG.evenement;
         const icon = L.divIcon({ 
             className: '', 
-            html: `<div style="width:14px;height:14px;border-radius:50%;background:${conf.color};border:2px solid #fff;box-shadow:0 2px 5px rgba(0,0,0,0.3);"></div>`, 
-            iconSize: [14, 14] 
+            html: `<div style="width:18px;height:18px;border-radius:50%;background:${conf.color};border:2.5px solid #fff;box-shadow:0 2px 6px rgba(0,0,0,0.35);"></div>`, 
+            iconSize: [18, 18],
+            iconAnchor: [9, 9]
         });
         L.marker([ev.lat, ev.lng], { icon })
          .addTo(map)
