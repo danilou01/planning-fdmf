@@ -75,6 +75,29 @@
     <button onclick="toggleAdminPanel()" title="Paramètres">⚙️</button>
 </div>
 
+<style>
+#reset-map-btn {
+    display: none;
+    position: absolute;
+    bottom: 20px;
+    left: 50%;
+    transform: translateX(-50%);
+    z-index: 1000;
+    background: var(--dmf-violet);
+    color: white;
+    border: none;
+    border-radius: 30px;
+    padding: 10px 22px;
+    font-family: 'Nunito', sans-serif;
+    font-weight: 700;
+    font-size: 0.9em;
+    cursor: pointer;
+    box-shadow: 0 4px 15px rgba(125,91,190,0.45);
+    transition: opacity 0.3s, transform 0.3s;
+}
+#reset-map-btn:hover { background: #6a4aa8; }
+</style>
+
 <div id="layout">
     <div class="region-sidebar" id="sidebar-left">
         <div class="sidebar-header">Régions A – M</div>
@@ -83,6 +106,7 @@
     
     <div id="map-wrapper">
         <div id="map"></div>
+        <button id="reset-map-btn" onclick="resetMap()">🗺️ Vue France</button>
         
         <div id="events-list-panel">
             <button class="close-x" onclick="toggleEventsList()">✕</button>
@@ -147,13 +171,15 @@ L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png').addTo(map);
 // Zoom programmatique vers un RDV, avec apparition du bouton retour
 function flyToEvent(lat, lng) {
     map.flyTo([lat, lng], 11, { duration: 1.2 });
-    document.getElementById('btn-reset-map').style.display = 'inline-block';
+    document.getElementById('btn-reset-map').style.display = 'none'; // topbar (legacy)
+    document.getElementById('reset-map-btn').style.display = 'block';
 }
 
 // Retour à la vue France entière
 function resetMap() {
     map.flyTo(MAP_DEFAULT.center, MAP_DEFAULT.zoom, { duration: 1.2 });
     document.getElementById('btn-reset-map').style.display = 'none';
+    document.getElementById('reset-map-btn').style.display = 'none';
 }
 
 // Masque hors France : on charge les contours de la France métropolitaine
