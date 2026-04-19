@@ -248,6 +248,19 @@ async function loadEvents() {
             } catch(e) { return d; }
         }
 
+        // Formatage de l'heure (Google Sheets renvoie parfois une date Excel pour les heures)
+        function formatHeure(h) {
+            if (!h) return "";
+            // Si c'est un objet Date (Apps Script sérialise les heures en ISO)
+            if (typeof h === 'string' && h.includes('T')) {
+                try {
+                    const d = new Date(h);
+                    return d.toLocaleTimeString('fr-FR', { hour: '2-digit', minute: '2-digit' });
+                } catch(e) {}
+            }
+            return String(h).trim();
+        }
+
         // On ne garde que les entrées avec lat/lng valides
         events = data
             .filter(row => row.lat !== "" && row.lat !== null && row.lng !== "" && row.lng !== null)
@@ -257,7 +270,8 @@ async function loadEvents() {
                 return {
                     title: e.titre || "Sans titre",
                     date: formatDate(e.date),
-                    time: "",
+                    time: formatHeure(e.heure),
+                    organisateur: (e.organisateur || "").toString().trim(),
                     type: normalizeType(e.type),
                     ville: e.ville || "",
                     lat: lat,
@@ -290,7 +304,12 @@ function renderMapAndUI() {
         });
         L.marker([ev.lat, ev.lng], { icon })
          .addTo(map)
-         .bindPopup(`<b>${conf.icon} ${ev.title}</b><br>${ev.date} ${ev.time}`);
+         .bindPopup(`
+            <b>${conf.icon} ${ev.title}</b><br>
+            📅 ${ev.date}${ev.time ? ' à ' + ev.time : ''}<br>
+            📍 ${ev.ville || ev.region}
+            ${ev.organisateur ? '<br>👤 ' + ev.organisateur : ''}
+         `);
     });
 
     // Mise à jour de la barre latérale (Sidebar)
@@ -303,7 +322,8 @@ function renderMapAndUI() {
         ? events.map(e => `
             <div style="padding:12px; border-bottom:1px solid #f0f0f0; cursor:pointer;" onclick="flyToEvent(${e.lat},${e.lng}); toggleEventsList();">
                 <b style="color:var(--dmf-violet);">${e.title}</b><br>
-                <small>📅 ${e.date} | 📍 ${e.region}</small>
+                <small>📅 ${e.date}${e.time ? ' à ' + e.time : ''} | 📍 ${e.ville || e.region}</small>
+                ${e.organisateur ? `<br><small>👤 ${e.organisateur}</small>` : ''}
             </div>`).join('')
         : "<p style='color:#999; text-align:center;'>Aucun rendez-vous trouvé.</p>";
 }
@@ -320,7 +340,7 @@ function renderRegion(r) {
             </div>
             <div class="region-events">
                 ${hasEvents
-                    ? evsInRegion.map(e => `<div class="region-ev-item" onclick="flyToEvent(${e.lat},${e.lng})">${e.title} <span class="ev-date">${e.date}</span></div>`).join('')
+                    ? evsInRegion.map(e => `<div class="region-ev-item" onclick="flyToEvent(${e.lat},${e.lng})">${e.title} <span class="ev-date">${e.date}${e.time ? ' à ' + e.time : ''}</span></div>`).join('')
                     : '<div style="color:#bbb; font-style:italic; font-size:0.85em; padding:4px 0;">Aucun RDV</div>'
                 }
             </div>
