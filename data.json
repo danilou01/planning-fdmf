@@ -226,5 +226,17 @@
     "lat": 49.258329,
     "lng": 4.031696,
     "ville": "reims"
+  },
+  {
+    "horodateur": "2026-04-19T08:37:02.000Z",
+    "titre": "Foire",
+    "date": "2026-04-29T22:00:00.000Z",
+    "heure": "",
+    "type": "évènement",
+    "organisateur": "",
+    "adresse e-mail": "valou.fournol@gmail.com",
+    "lat": 48.80225850000001,
+    "lng": 2.1297422,
+    "ville": "Versailles"
   }
 ]
