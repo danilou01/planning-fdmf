@@ -238,5 +238,17 @@
     "lat": 48.80225850000001,
     "lng": 2.1297422,
     "ville": "Versailles"
+  },
+  {
+    "horodateur": "2026-04-19T09:21:28.000Z",
+    "titre": "rdv instances",
+    "date": "2026-04-26T22:00:00.000Z",
+    "heure": "",
+    "type": "instances",
+    "organisateur": "",
+    "adresse e-mail": "rdan9646@gmail.com",
+    "lat": 45.793516,
+    "lng": 3.0794951,
+    "ville": "clermont ferrand"
   }
 ]
